@@ -34,8 +34,10 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Decode and set up Maven settings
-        if: ${{ secrets.MAVEN_SETTINGS_BASE64 != '' }}
+        if: secrets.MAVEN_SETTINGS_BASE64 != ''
         run: echo "${{ secrets.MAVEN_SETTINGS_BASE64 }}" | base64 --decode > $HOME/.m2/settings.xml
+        env:
+          MAVEN_SETTINGS_BASE64: ${{ secrets.MAVEN_SETTINGS_BASE64 }}
 
       - name: Build with Maven
         run: mvn --batch-mode clean package
