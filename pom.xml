@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spigot-api.vesion>1.21.11-R0.1-SNAPSHOT</spigot-api.vesion>
         <lombok.version>1.18.38</lombok.version>
-        <HandyLib.version>3.31.5</HandyLib.version>
+        <HandyLib.version>3.10.9</HandyLib.version>
         <VaultAPI.vesion>1.7</VaultAPI.vesion>
         <PlayerPoints.version>3.3.2</PlayerPoints.version>
         <placeholderapi.version>2.11.7</placeholderapi.version>
@@ -20,10 +20,6 @@
     </properties>
 
     <repositories>
-        <repository>
-            <id>handy-repository</id>
-            <url>https://nexus.handyplus.cn/releases</url>
-        </repository>
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>

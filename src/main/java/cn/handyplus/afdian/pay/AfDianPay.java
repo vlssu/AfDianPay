@@ -5,12 +5,12 @@ import cn.handyplus.afdian.pay.job.QueryOrderJob;
 import cn.handyplus.afdian.pay.util.AfDianUtil;
 import cn.handyplus.afdian.pay.util.ConfigUtil;
 import cn.handyplus.lib.InitApi;
-import cn.handyplus.lib.constants.HookPluginEnum;
 import cn.handyplus.lib.util.BaseUtil;
-import cn.handyplus.lib.util.HookPluginUtil;
 import cn.handyplus.lib.util.MessageUtil;
 import org.black_ixx.playerpoints.PlayerPoints;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -31,19 +31,22 @@ public class AfDianPay extends JavaPlugin {
         // 加载 配置
         ConfigUtil.init();
         // 加载 PlaceholderApi
-        USE_PAPI = HookPluginUtil.hook(HookPluginEnum.PLACEHOLDER_API);
+        USE_PAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
         if (USE_PAPI) {
             new PlaceholderUtil(this).register();
         }
         // 加载 PlayerPoints
-        HookPluginUtil.hookToPlugin(HookPluginEnum.PLAYER_POINTS).ifPresent(value -> PLAYER_POINTS = (PlayerPoints) value);
+        Plugin playerPointsPlugin = Bukkit.getPluginManager().getPlugin("PlayerPoints");
+        if (playerPointsPlugin != null) {
+            PLAYER_POINTS = (PlayerPoints) playerPointsPlugin;
+        }
 
         // 初始化
         initApi.initCommand("cn.handyplus.afdian.pay.command")
                 .initListener("cn.handyplus.afdian.pay.listener")
                 .enableSql("cn.handyplus.afdian.pay.entity")
                 .addMetrics(17625)
-                .checkVersion();
+                .checkVersion(true);
 
         // 初始化域名
         AfDianUtil.init();
