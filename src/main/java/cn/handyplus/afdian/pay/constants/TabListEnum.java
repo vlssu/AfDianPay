@@ -1,7 +1,7 @@
 package cn.handyplus.afdian.pay.constants;
 
 import cn.handyplus.afdian.pay.util.ConfigUtil;
-import cn.handyplus.lib.db.DbTypeEnum;
+import cn.handyplus.lib.db.enums.DbTypeEnum;
 import cn.handyplus.lib.util.BaseUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

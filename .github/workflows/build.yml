@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - main
+      - 'copilot/**'
   pull_request:
     branches:
       - master
@@ -34,7 +35,12 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Decode and set up Maven settings
-        run: echo "${{ secrets.MAVEN_SETTINGS_BASE64 }}" | base64 --decode > $HOME/.m2/settings.xml
+        run: |
+          if [ -n "$MAVEN_SETTINGS_BASE64" ]; then
+            echo "$MAVEN_SETTINGS_BASE64" | base64 --decode > $HOME/.m2/settings.xml
+          fi
+        env:
+          MAVEN_SETTINGS_BASE64: ${{ secrets.MAVEN_SETTINGS_BASE64 }}
 
       - name: Build with Maven
         run: mvn --batch-mode clean package
@@ -57,10 +63,3 @@ jobs:
           name: ${{ steps.artifact.outputs.artifact_id }} Artifacts
           path: ${{ steps.artifact.outputs.jar_path }}
           retention-days: 7
-
-      - name: Upload JAR to WebDAV
-        run: |
-          curl -T "${{ steps.artifact.outputs.jar_path }}" \
-            "${{ secrets.WEBDAV_URL }}/plugins/${{ steps.artifact.outputs.artifact_id }}/${{ steps.artifact.outputs.jar_name }}" \
-            -u "${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}"
-          echo "Uploaded: ${{ steps.artifact.outputs.jar_name }}"

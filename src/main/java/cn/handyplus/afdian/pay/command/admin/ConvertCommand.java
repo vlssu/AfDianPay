@@ -5,7 +5,7 @@ import cn.handyplus.afdian.pay.service.AfDianOrderService;
 import cn.handyplus.lib.command.IHandyCommandEvent;
 import cn.handyplus.lib.constants.BaseConstants;
 import cn.handyplus.lib.db.Db;
-import cn.handyplus.lib.db.DbTypeEnum;
+import cn.handyplus.lib.db.enums.DbTypeEnum;
 import cn.handyplus.lib.db.SqlManagerUtil;
 import cn.handyplus.lib.util.AssertUtil;
 import cn.handyplus.lib.util.BaseUtil;
