@@ -34,7 +34,12 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Decode and set up Maven settings
-        run: echo "${{ secrets.MAVEN_SETTINGS_BASE64 }}" | base64 --decode > $HOME/.m2/settings.xml
+        env:
+          MAVEN_SETTINGS_BASE64: ${{ secrets.MAVEN_SETTINGS_BASE64 }}
+        run: |
+          if [ -n "$MAVEN_SETTINGS_BASE64" ]; then
+            echo "$MAVEN_SETTINGS_BASE64" | base64 --decode > $HOME/.m2/settings.xml
+          fi
 
       - name: Build with Maven
         run: mvn --batch-mode clean package
@@ -59,8 +64,14 @@ jobs:
           retention-days: 7
 
       - name: Upload JAR to WebDAV
+        env:
+          WEBDAV_URL: ${{ secrets.WEBDAV_URL }}
+          WEBDAV_USER: ${{ secrets.WEBDAV_USER }}
+          WEBDAV_PASS: ${{ secrets.WEBDAV_PASS }}
         run: |
-          curl -T "${{ steps.artifact.outputs.jar_path }}" \
-            "${{ secrets.WEBDAV_URL }}/plugins/${{ steps.artifact.outputs.artifact_id }}/${{ steps.artifact.outputs.jar_name }}" \
-            -u "${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASS }}"
-          echo "Uploaded: ${{ steps.artifact.outputs.jar_name }}"
+          if [ -n "$WEBDAV_URL" ]; then
+            curl -T "${{ steps.artifact.outputs.jar_path }}" \
+              "$WEBDAV_URL/plugins/${{ steps.artifact.outputs.artifact_id }}/${{ steps.artifact.outputs.jar_name }}" \
+              -u "$WEBDAV_USER:$WEBDAV_PASS"
+            echo "Uploaded: ${{ steps.artifact.outputs.jar_name }}"
+          fi

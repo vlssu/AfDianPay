@@ -19,6 +19,29 @@
         <annotations.version>26.0.2</annotations.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>handy-repository</id>
+            <url>https://nexus.handyplus.cn/releases</url>
+        </repository>
+        <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>vault-repo</id>
+            <url>https://nexus.hc.to/content/repositories/pub_releases/</url>
+        </repository>
+        <repository>
+            <id>rosewood-repo</id>
+            <url>https://repo.rosewooddev.io/repository/public/</url>
+        </repository>
+        <repository>
+            <id>placeholderapi-repo</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>cn.handyplus.lib</groupId>
