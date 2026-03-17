@@ -41,6 +41,48 @@ jobs:
             echo "$MAVEN_SETTINGS_BASE64" | base64 --decode > $HOME/.m2/settings.xml
           fi
 
+      - name: Build and install dependencies from source
+        env:
+          HANDYLIB_VERSION: '3.31.5'
+        run: |
+          # Create temporary settings.xml with public repos needed to build handyplus libraries
+          cat > /tmp/build-settings.xml << 'EOF'
+          <settings>
+            <profiles>
+              <profile>
+                <id>build-deps</id>
+                <repositories>
+                  <repository>
+                    <id>spigotmc-repo</id>
+                    <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+                  </repository>
+                  <repository>
+                    <id>papermc-repo</id>
+                    <url>https://repo.papermc.io/repository/maven-public/</url>
+                  </repository>
+                </repositories>
+              </profile>
+            </profiles>
+            <activeProfiles>
+              <activeProfile>build-deps</activeProfile>
+            </activeProfiles>
+          </settings>
+          EOF
+
+          # Build and install FoliaLib from GitHub (only depends on folia-api from papermc)
+          git clone --depth=1 https://github.com/handyplus/FoliaLib.git /tmp/FoliaLib
+          cd /tmp/FoliaLib
+          mvn --batch-mode install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -s /tmp/build-settings.xml
+
+          # Build and install HandyLib from Gitee (depends on FoliaLib installed above)
+          # Try tagged release first (with and without 'v' prefix), then fall back to HEAD
+          git clone --depth=1 --branch "${HANDYLIB_VERSION}" https://gitee.com/handy-git/HandyLib.git /tmp/HandyLib 2>/dev/null || \
+            git clone --depth=1 --branch "v${HANDYLIB_VERSION}" https://gitee.com/handy-git/HandyLib.git /tmp/HandyLib 2>/dev/null || \
+            git clone --depth=1 https://gitee.com/handy-git/HandyLib.git /tmp/HandyLib
+          cd /tmp/HandyLib
+          mvn versions:set -DnewVersion="${HANDYLIB_VERSION}" -DgenerateBackupPoms=false -q
+          mvn --batch-mode install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -s /tmp/build-settings.xml
+
       - name: Build with Maven
         run: mvn --batch-mode clean package
 

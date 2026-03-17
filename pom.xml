@@ -69,7 +69,7 @@
         </dependency>
         <dependency>
             <groupId>org.black_ixx</groupId>
-            <artifactId>PlayerPoints</artifactId>
+            <artifactId>playerpoints</artifactId>
             <version>${PlayerPoints.version}</version>
             <scope>provided</scope>
         </dependency>
