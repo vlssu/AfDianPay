@@ -62,16 +62,3 @@ jobs:
           name: ${{ steps.artifact.outputs.artifact_id }} Artifacts
           path: ${{ steps.artifact.outputs.jar_path }}
           retention-days: 7
-
-      - name: Upload JAR to WebDAV
-        env:
-          WEBDAV_URL: ${{ secrets.WEBDAV_URL }}
-          WEBDAV_USER: ${{ secrets.WEBDAV_USER }}
-          WEBDAV_PASS: ${{ secrets.WEBDAV_PASS }}
-        run: |
-          if [ -n "$WEBDAV_URL" ]; then
-            curl -T "${{ steps.artifact.outputs.jar_path }}" \
-              "$WEBDAV_URL/plugins/${{ steps.artifact.outputs.artifact_id }}/${{ steps.artifact.outputs.jar_name }}" \
-              -u "$WEBDAV_USER:$WEBDAV_PASS"
-            echo "Uploaded: ${{ steps.artifact.outputs.jar_name }}"
-          fi
